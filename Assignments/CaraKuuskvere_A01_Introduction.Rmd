@@ -1,0 +1,60 @@
+---
+title: "Assignment 1: Introduction"
+author: "Cara Kuuskvere"
+output: pdf_document
+geometry: margin=2.54cm
+---
+
+## OVERVIEW
+
+This exercise accompanies the introductory material in Environmental Data Analytics. 
+
+## Directions
+1.  Rename this file `<FirstLast>_A01_Introduction.Rmd` (replacing `<FirstLast>` with your first and last name).
+2.  Change "Student Name" on line 3 (above) with your name.
+3.  Work through the steps, **creating code and output** that fulfill each instruction.
+4.  Be sure to **answer the questions** in this assignment document.
+5.  When you have completed the assignment, **Knit** the text and code into a single PDF file.
+6.  After Knitting, submit the completed exercise (PDF file) to the appropriate assigment section on Sakai.
+
+
+## 1) Finish setting up R Studio
+
+### Install TinyTex
+Now, run this code cell the same way. This will install "tinytex" -- a helper app that allows you to knit your markdown documents into professional quality PDFs.
+```{r install tiny tex, eval=FALSE, include=FALSE}
+#install tinytext
+tinytex::install_tinytex()
+```
+
+### Set your default knit directory
+This setting will help deal with relative paths later on...
+ - From the Tool menu, select `Global Options`
+ - Select the RMarkdown section
+ - In the "Evaluate chunks in directory", set the option to "Project" (If you don't see this option, try restarting RStudio.)
+
+
+## 2) Discussion Questions
+Enter answers to the questions just below the >Answer: prompt.
+
+1. What are your previous experiences with data analytics, R, and Git? Include both formal and informal training.
+
+> Answer: My previous expereinces in data analytics lie in my professional work and undergraduate coursework. I recieved formal training in undergraduate statistics courses and business analytics courses, and applied these in various class contexts. In my professional career, I have spent a lot of time working in energy data analytics, evaluating industrial manufacturing energy and carbon data. I have no substantive experience using R and Git, but I have completed coursework in both introduction to computer science and linear algebra, which give me a good idea of the data analysis and coding logic. Further, I have experience coding in TypeScript and Matlab. 
+
+2. Are there any components of the course about which you feel confident?
+
+> Answer: I feel confident about my ability to follow through the directions given to me and to troubleshoot as I have issues. While this is the first time I am learning R and Git, this is not the first time I have learned a coding language or how to use a new program. My problem solving skills give me confidence that I can succede. 
+
+3. Are there any components of the course about which you feel apprehensive?
+
+> Answer: I am apprehensive regarding the unfamiliar content and how quickly things may get complicated. I know with enough time and dedication I can figure out how get desired results. However, if I fall confused and behind it will become very challenging to catch back up. 
+
+
+## 3) GitHub
+
+Provide a link below to your forked course repository in GitHub. Make sure you have pulled all recent changes from the course repository and that you have updated your course README file, committed those changes, and pushed them to your GitHub account. 
+
+> Answer: https://github.com/carapk/EDE_Fall2023/tree/main
+
+## 4) Knitting
+When you have completed this document, click the `knit` button.This should produce a PDF copy of your markdown document. Submit this PDF to Sakai. 
