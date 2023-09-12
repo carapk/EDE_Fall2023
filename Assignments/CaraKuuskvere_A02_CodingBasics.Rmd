@@ -1,0 +1,101 @@
+---
+title: "Assignment 2: Coding Basics"
+author: "Cara Kuuskvere"
+output: pdf_document
+geometry: margin=2.54cm
+editor_options: 
+  chunk_output_type: console
+---
+
+## OVERVIEW
+
+This exercise accompanies the lessons in Environmental Data Analytics on coding basics.
+
+## Directions
+
+1.  Rename this file `<FirstLast>_A02_CodingBasics.Rmd` (replacing `<FirstLast>` with your first and last name).
+2.  Change "Student Name" on line 3 (above) with your name.
+3.  Work through the steps, **creating code and output** that fulfill each instruction.
+4.  Be sure to **answer the questions** in this assignment document.
+5.  When you have completed the assignment, **Knit** the text and code into a single PDF file.
+6.  After Knitting, submit the completed exercise (PDF file) to Sakai.
+
+## Basics, Part 1
+
+1.  Generate a sequence of numbers from one to 30, increasing by threes. Assign this sequence a name.
+
+2.  Compute the mean and median of this sequence.
+
+3.  Ask R to determine whether the mean is greater than the median.
+
+4.  Insert comments in your code to describe what you are doing.
+
+```{r basics 1}
+#1. I created an object named "basics1" that is a sequence of numbers from 1 to 30 increasing by 3's. I then printed this sequence (and commented this action out) to review its outputs and check my work. 
+basics1 <- seq (1,30,3)
+#print(basics1)
+
+#2. I created two objects, one named "basicsmean" which is assigned the mean value of the sequence "basics1". I then created a "basicsmedian" object, which is assigned the value fo the median of the sequence "basics1." I printed each of these to see their values, which I commented out since that was not requested. 
+basicsmean <- mean(basics1)
+print (basicsmean)
+basicsmedian <- median(basics1)
+#print (basicsmedian)
+#3. I ran a boolean test to see if "basicsmean" is greater than "basicsmedian", and this returned the value of false. I also ran the boolean to see if the mean is less than the median, which also returned false -- therefore, the values are equal. 
+basicsmean > basicsmedian
+basicsmean < basicsmedian
+```
+
+## Basics, Part 2
+
+5.  Create a series of vectors, each with four components, consisting of (a) names of students, (b) test scores out of a total 100 points, and (c) whether or not they have passed the test (TRUE or FALSE) with a passing grade of 50.
+
+6.  Label each vector with a comment on what type of vector it is.
+
+7.  Combine each of the vectors into a data frame. Assign the data frame an informative name.
+
+8.  Label the columns of your data frame with informative titles.
+
+```{r basics 2}
+student_name <- c("hannah", "nicole", "zach", "cara")
+test_scores <- c(65, 95, 30, 77)
+passing_score <- c(test_scores>=50)
+
+
+test_grader <- data.frame(student_name, test_scores, passing_score)
+colnames(test_grader) <- c("Student Name", "Exam Score out of 100", "Passing?")
+
+#print(test_grader)
+
+
+```
+
+9.  QUESTION: How is this data frame different from a matrix?
+
+> Answer: A data frame and a matrix both consist of a list of vectors of equal length. However, a in a matrix all the vectors must be of the same type (ie character, integer, etc.) whereas in a data frame the vectors do not need to be the same type (you can have a vector of characters accompanied by a vector of integers). 
+
+10. Create a function with an if/else statement. Your function should take a **vector** of test scores and print (not return) whether a given test score is a passing grade of 50 or above (TRUE or FALSE). You will need to choose either the `if` and `else` statements or the `ifelse` statement. 
+
+11. Apply your function to the vector with test scores that you created in number 5.
+
+```{r basics 3}
+#grader2 <- function(x){
+# if (x>=50){
+#    print("TRUE")
+#  }
+#  else {
+#    print("FALSE")
+#  }
+#}
+
+#grader2(3)
+#grader2(test_scores)
+
+grader <- function (x) {ifelse(x>=50,"PASSING","FAILING")
+}
+
+print(grader(test_scores))
+```
+
+12. QUESTION: Which option of `if` and `else` vs. `ifelse` worked? Why?
+
+> Answer: "ifelse" worked rather than "if, else." Ifelse returned the output of the grader function because it is able to work with vectors. However, I received an error for my condition of the if, else statement that it has length greater than 1, due to inputting a vector for "X". I tested my if else with an integer, and the function worked. My if, else statement, which is commented out, can be un-commented and run to demonstrate this. 
