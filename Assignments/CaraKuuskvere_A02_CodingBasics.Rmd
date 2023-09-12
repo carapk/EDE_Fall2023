@@ -92,7 +92,6 @@ colnames(test_grader) <- c("Student Name", "Exam Score out of 100", "Passing?")
 
 grader <- function (x) {ifelse(x>=50,"PASSING","FAILING")
 }
-
 print(grader(test_scores))
 ```
 
