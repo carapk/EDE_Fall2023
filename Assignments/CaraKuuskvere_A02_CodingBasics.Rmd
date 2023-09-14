@@ -97,4 +97,4 @@ print(grader(test_scores))
 
 12. QUESTION: Which option of `if` and `else` vs. `ifelse` worked? Why?
 
-> Answer: "ifelse" worked rather than "if, else." Ifelse returned the output of the grader function because it is able to work with vectors. However, I received an error for my condition of the if, else statement that it has length greater than 1, due to inputting a vector for "X". I tested my if else with an integer, and the function worked. My if, else statement, which is commented out, can be un-commented and run to demonstrate this. 
+> Answer: "ifelse" worked rather than "if, else." Ifelse returned the output of the grader function because it is able to work with vectors. However, I received an error for my condition of the if, else statement that it has length greater than 1, due to inputting a vector for "X". I tested my if else with an integer, and the function worked. My if, else statement, which is commented out, can be un-commented and run to demonstrate this.
