@@ -1,6 +1,6 @@
 ---
 title: "Assignment 3: Data Exploration"
-author: "Student Name"
+author: "Cara Kuuskvere"
 date: "Fall 2023"
 output: pdf_document
 geometry: margin=2.54cm
@@ -32,7 +32,24 @@ This exercise accompanies the lessons in Environmental Data Analytics on Data Ex
 
 1.  Check your working directory, load necessary packages (tidyverse, lubridate), and upload two datasets: the ECOTOX neonicotinoid dataset (ECOTOX_Neonicotinoids_Insects_raw.csv) and the Niwot Ridge NEON dataset for litter and woody debris (NEON_NIWO_Litter_massdata_2018-08_raw.csv). Name these datasets "Neonics" and "Litter", respectively. Be sure to include the subcommand to read strings in as factors.
 
-```{r,  message = FALSE}
+```{r set up session Q1,  message = FALSE}
+# Install commands if needed
+#install.packages("tidyverse") 
+#install.packages("lubridate")
+
+
+#loading the specified packages
+library(tidyverse)
+library(lubridate)
+
+
+#uploading the datasets and read strings in as factors subcommand
+Neonics <- read.csv("Data/Raw/ECOTOX_Neonicotinoids_Insects_raw.csv", stringsAsFactors= TRUE)
+View(Neonics)
+
+Litter <- read.csv("Data/Raw/NEON_NIWO_Litter_massdata_2018-08_raw.csv", stringsAsFactors=TRUE )
+View(Litter)
+
 
 ```
 
@@ -57,34 +74,47 @@ This exercise accompanies the lessons in Environmental Data Analytics on Data Ex
 
 5.  What are the dimensions of the dataset?
 
-```{r}
+```{r dimensions of Neonics Q5}
+# Determine the dimensions of Neonics using the dim function
+Neonics_dimensions <- dim(Neonics)
 
+#view the dimensions in the console
+print (Neonics_dimensions)
 ```
 
 6.  Using the `summary` function on the "Effect" column, determine the most common effects that are studied. Why might these effects specifically be of interest?
 
-```{r}
+```{r summary of Effect column Q6}
+# using the summary function to view a summary of the most common effects found in the effect column of the Neonics df
+Neonics_effects_summary <- summary(Neonics$Effect)
+
+# printing this summart to the console
+print(Neonics_effects_summary)
 
 ```
 
 > Answer:
-
+The most common effects studied in the Neonics dataframe are mortality (1493 instances), population (1803 instances), and behavior (360 instances). These effects may be specifically of interest because these specific effects impact the ability of insect specicies to maintain population stability, and the most studied effects are important to see because we can see what researchers believe have the greatest for most dangerous impacts on the insects. 
 
 7.  Using the `summary` function, determine the six most commonly studied species in the dataset (common name). What do these species have in common, and why might they be of interest over other insects? Feel free to do a brief internet search for more information if needed.[TIP: The `sort()` command can sort the output of the summary command...]
 
-```{r}
+```{r summary: six most commonly studied species Q7}
+# using summary to find the six most commonly studied species in the dataset using their common name
+Neonics_species_summary <- summary(Neonics$Species.Common.Name)
 
+# viewing the summary
+print(Neonics_species_summary)
 ```
 
-> Answer:
+> Answer: The six most commonly studied species are the Honey Bee, the Parasitic Wasp, and the Buff Tailed Bumblebee. 
 
 8.  Concentrations are always a numeric value. What is the class of `Conc.1..Author.` column in the dataset, and why is it not numeric?
 
-```{r}
-
+```{r class of the Conc.1.Author Q8}
+class(Neonics$Conc.1..Author.)
 ```
 
-> Answer:
+> Answer: The class of Conc.1.Author is a factor. This is used when 
 
 ## Explore your data graphically (Neonics)
 
