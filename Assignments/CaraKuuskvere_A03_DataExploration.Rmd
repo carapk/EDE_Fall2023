@@ -182,9 +182,6 @@ Q11
 # Checking the class of collectDate. It is returned as a factor. 
 class(Litter$collectDate)
 
-#install.packages("lubridate")
-library(lubridate)
-
 #changing the collectDate class to a year-month-date date
 Litter$collectDate <- ymd(Litter$collectDate)
 
