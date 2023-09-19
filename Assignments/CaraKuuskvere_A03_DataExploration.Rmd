@@ -115,6 +115,7 @@ Neonics_species_summary
 8.  Concentrations are always a numeric value. What is the class of `Conc.1..Author.` column in the dataset, and why is it not numeric?
 
 ```{r class of the Conc.1.Author Q8}
+#identifying the class
 class(Neonics$Conc.1..Author.)
 ```
 
@@ -150,8 +151,6 @@ Q10 <- ggplot(Neonics) +
   # modified the color to break out different color lines by the test location
 geom_freqpoly(aes(x = Publication.Year, color=Test.Location), bins=40, binwidth=1) +
   
-  # putting the legend at the top for easier viewing
-  theme(legend.position = "top")
 
 Q10
 ```
@@ -165,10 +164,11 @@ Interpret this graph. What are the most common test locations, and do they diffe
 [**TIP**: Add `theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))` to the end of your plot command to rotate and align the X-axis labels...]
 
 ```{r Neonics Endpoint Bar Graph, fig.height = 3, fig.width = 4}
+# creating a bar graph for neonics enpoint frequencies 
 Q11 <- ggplot(Neonics, aes(x = Endpoint)) +
   geom_bar()+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-
+# calling the bar graph
 Q11
 ```
 
