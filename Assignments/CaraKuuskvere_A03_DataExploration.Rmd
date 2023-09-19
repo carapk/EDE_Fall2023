@@ -149,7 +149,7 @@ Q10 <- ggplot(Neonics) +
   # setting the bin number to 40 and bin width to 1 to represent a 40 year time
   #period of options
   # modified the color to break out different color lines by the test location
-geom_freqpoly(aes(x = Publication.Year, color=Test.Location), bins=40, binwidth=1) +
+geom_freqpoly(aes(x = Publication.Year, color=Test.Location), bins=40, binwidth=1) 
   
 
 Q10
