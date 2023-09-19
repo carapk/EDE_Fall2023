@@ -108,7 +108,7 @@ Neonics_species_summary <- summary(Neonics$Species.Common.Name)
 Neonics_species_summary
 ```
 
-> Answer: The six most commonly studied species are the Honey Bee, the Parasitic Wasp, and the Buff Tailed Bumblebee. The three of these species all offer ecosystem services that are very important to the health of the ecoystem. All three act as polinators, however the Buff Trailed Bumblbee and the Honey Bee are far more effective than the Parasitic Wasp. However, the Parasitic Wasp is important in managing the population of other forests pests and keeping populations of other insect species in check. 
+> Answer: The six most commonly studied species are the Honey Bee, the Parasitic Wasp, the Buff Tailed Bumblebee, the Carniolan Honey Bee, the Bumble Bee, and the Italian Honeybee. The six of these species all offer ecosystem services that are very important to the health of the ecoystem. All six act as polinators, however the Bees are far more effective than the Parasitic Wasp. However, the Parasitic Wasp is important in managing the population of other forests pests and keeping populations of other insect species in check. 
 
 8.  Concentrations are always a numeric value. What is the class of `Conc.1..Author.` column in the dataset, and why is it not numeric?
 
