@@ -194,11 +194,18 @@ unique(Litter$collectDate)
 
 13. Using the `unique` function, determine how many plots were sampled at Niwot Ridge. How is the information obtained from `unique` different from that obtained from `summary`?
 
-```{r}
+```{r Finding Unique sample plots}
+#Uncomment the code below to see the different sample plot names
+#unique(Litter$plotID)
 
+#Finding how many unique sample plots on Niwot Ridge in dataset
+length(unique(Litter$plotID))
+
+summary(Litter$plotID)
+length(summary(Litter$plotID))
 ```
 
-> Answer:
+> Answer:The summary shows you how many of each unique plot there are in the sample, whereas unique only shows you the names of the unique plot IDs. You can use length to find the amount of unique plots sampled for each. Summary provides more information regarding the count of plots than unique
 
 14. Create a bar graph of functionalGroup counts. This shows you what type of litter is collected at the Niwot Ridge sites. Notice that litter types are fairly equally distributed across the Niwot Ridge sites.
 
