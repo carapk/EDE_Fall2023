@@ -87,7 +87,8 @@ Neonics_dimensions
 6.  Using the `summary` function on the "Effect" column, determine the most common effects that are studied. Why might these effects specifically be of interest?
 
 ```{r summary of Effect column Q6}
-# using the summary function to view a summary of the most common effects found in the effect column of the Neonics df
+# using the summary function to view a summary of the most common effects 
+#found in the effect column of the Neonics df
 Neonics_effects_summary <- summary(Neonics$Effect)
 
 # calling the variable
@@ -101,7 +102,8 @@ The most common effects studied in the Neonics dataframe are mortality (1493 ins
 7.  Using the `summary` function, determine the six most commonly studied species in the dataset (common name). What do these species have in common, and why might they be of interest over other insects? Feel free to do a brief internet search for more information if needed.[TIP: The `sort()` command can sort the output of the summary command...]
 
 ```{r summary: six most commonly studied species Q7}
-# using summary to find the six most commonly studied species in the dataset using their common name
+# using summary to find the six most commonly studied species in the dataset 
+#using their common name
 Neonics_species_summary <- summary(Neonics$Species.Common.Name)
 
 # calling the variable
@@ -126,8 +128,10 @@ class(Neonics$Conc.1..Author.)
 # inputting neonics dataset to the plot
 Q9 <- ggplot(Neonics) +
   
-  # creating a frequency plot with publication year on x axis and count of studies on y
-  # setting the bin number to 40 and binwidth to 1 to represent a 40 year time period of options
+  # creating a frequency plot with publication year on x axis and count of
+  #studies on y
+  # setting the bin number to 40 and binwidth to 1 to represent a 40 year time 
+  #period of options
 geom_freqpoly(aes(x = Publication.Year), bins=40, binwidth=1)
 
 Q9
@@ -139,8 +143,10 @@ Q9
 # inputting neonics dataset to the plot
 Q10 <- ggplot(Neonics) +
   
-    # creating a frequency plot with publication year on x axis and count of studies on y
-  # setting the bin number to 40 and bin width to 1 to represent a 40 year time period of options
+  #creating a frequency plot with publication year on x axis and count of 
+  #studies on y
+  # setting the bin number to 40 and bin width to 1 to represent a 40 year time
+  #period of options
   # modified the color to break out different color lines by the test location
 geom_freqpoly(aes(x = Publication.Year, color=Test.Location), bins=40, binwidth=1) +
   
@@ -226,7 +232,8 @@ Q14
 ```{r Litter BoxPlot and Violin of drymass by functional group, fig.height = 3, fig.width = 4}
 #creating the box plot for dry mass by functional group
 Q15BoxPlot <- ggplot(Litter, aes(x=functionalGroup, y=dryMass)) +
-  geom_boxplot(aes(x = functionalGroup, y = dryMass, group = cut_width(functionalGroup, 1)))+
+  geom_boxplot(aes(x = functionalGroup, y = dryMass, 
+                   group = cut_width(functionalGroup, 1)))+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 #calling the boxplot
