@@ -116,13 +116,13 @@ Neonics_species_summary
 class(Neonics$Conc.1..Author.)
 ```
 
-> Answer: The class of Conc.1.Author is a factor. This is used to categorize and store data when the dataset has a limited number of different values. It is not numeric becasue 
+> Answer: The class of Conc.1.Author is a factor. This is used to categorize and store data when the dataset has a limited number of different values. It is not numeric becasue it is reading strings as factors when we import the CSV file, and it detects the strings/ factors due to seeing non-numeric data of dashes. 
 
 ## Explore your data graphically (Neonics)
 
 9.  Using `geom_freqpoly`, generate a plot of the number of studies conducted by publication year.
 
-```{r Number of Studies by publication year in Neonics}
+```{r Number of Studies by publication year in Neonics, fig.height = 3, fig.width = 4}
 # inputting neonics dataset to the plot
 Q9 <- ggplot(Neonics) +
   
@@ -135,7 +135,7 @@ Q9
 
 10. Reproduce the same graph but now add a color aesthetic so that different Test.Location are displayed as different colors.
 
-```{r Number of Studies in Neonics by publication year with location colors}
+```{r Number of Studies in Neonics by publication year with location colors, fig.height = 3, fig.width = 4}
 # inputting neonics dataset to the plot
 Q10 <- ggplot(Neonics) +
   
@@ -158,7 +158,7 @@ Interpret this graph. What are the most common test locations, and do they diffe
 
 [**TIP**: Add `theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))` to the end of your plot command to rotate and align the X-axis labels...]
 
-```{r Neonics Endpoint Bar Graph}
+```{r Neonics Endpoint Bar Graph, fig.height = 3, fig.width = 4}
 Q11 <- ggplot(Neonics, aes(x = Endpoint)) +
   geom_bar()+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
@@ -205,24 +205,47 @@ summary(Litter$plotID)
 length(summary(Litter$plotID))
 ```
 
-> Answer:The summary shows you how many of each unique plot there are in the sample, whereas unique only shows you the names of the unique plot IDs. You can use length to find the amount of unique plots sampled for each. Summary provides more information regarding the count of plots than unique
+> Answer:The summary shows you how many of each unique plot there are in the sample, whereas unique only shows you the names of the unique plot IDs. You can use length to find the amount of unique plots sampled for each. Summary provides more information regarding the count of each of the plots than unique. 
 
 14. Create a bar graph of functionalGroup counts. This shows you what type of litter is collected at the Niwot Ridge sites. Notice that litter types are fairly equally distributed across the Niwot Ridge sites.
 
-```{r}
+```{r Bar Graph for functiona Group counts, fig.height = 3, fig.width = 4}
+# creating the bar graph of type of litter collected at Niwot Ridge sites
+Q14 <- ggplot(Litter, aes(x = functionalGroup)) +
+  geom_bar() +
+  
+  #rotating the x axis text since the names are long
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
+# printing the bargraph
+Q14
 ```
 
 15. Using `geom_boxplot` and `geom_violin`, create a boxplot and a violin plot of dryMass by functionalGroup.
 
-```{r}
+```{r Litter BoxPlot and Violin of drymass by functional group, fig.height = 3, fig.width = 4}
+#creating the box plot for dry mass by functional group
+Q15BoxPlot <- ggplot(Litter, aes(x=functionalGroup, y=dryMass)) +
+  geom_boxplot(aes(x = functionalGroup, y = dryMass, group = cut_width(functionalGroup, 1)))+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
+#calling the boxplot
+Q15BoxPlot
+
+#creating the violin for dry mass by functional group
+Q15Violin <- ggplot(Litter) +  
+  geom_violin(aes(x = functionalGroup, y = dryMass),
+              draw_quantiles = c(0.25, 0.5, 0.75))+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+   
+# calling the violin
+Q15Violin
 ```
 
 Why is the boxplot a more effective visualization option than the violin plot in this case?
 
-> Answer:
+> Answer: The boxplot is a more effective visualization than the violin becasue the violin is very thin and difficult to see the spread and quantiles of data due to outliers. The boxplot is effective because it moves the outliers out so you can better visualize the bulk/ average ranges of the data.
 
 What type(s) of litter tend to have the highest biomass at these sites?
 
-> Answer:
+> Answer: Needles and the "mixed" category tend to have the highest biomass by dry mass at these sites. 
