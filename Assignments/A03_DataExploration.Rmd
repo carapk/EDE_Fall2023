@@ -33,7 +33,7 @@ This exercise accompanies the lessons in Environmental Data Analytics on Data Ex
 1.  Check your working directory, load necessary packages (tidyverse, lubridate), and upload two datasets: the ECOTOX neonicotinoid dataset (ECOTOX_Neonicotinoids_Insects_raw.csv) and the Niwot Ridge NEON dataset for litter and woody debris (NEON_NIWO_Litter_massdata_2018-08_raw.csv). Name these datasets "Neonics" and "Litter", respectively. Be sure to include the subcommand to read strings in as factors.
 
 ```{r set up session Q1,  message = FALSE}
-# Install commands if needed
+#Install commands if needed
 #install.packages("tidyverse") 
 #install.packages("lubridate")
 
@@ -57,18 +57,18 @@ View(Litter)
 
 2.  The neonicotinoid dataset was collected from the Environmental Protection Agency's ECOTOX Knowledgebase, a database for ecotoxicology research. Neonicotinoids are a class of insecticides used widely in agriculture. The dataset that has been pulled includes all studies published on insects. Why might we be interested in the ecotoxicology of neonicotinoids on insects? Feel free to do a brief internet search if you feel you need more background information.
 
-> Answer:
+> Answer: Per Hladik et al's 2018 paper "Environmental Risks and Challenges Associated with Neonicotinoid Insecticides", neonicotinoids have been used for over two decades, and their use has increased rapidly in recent years as practices shift from ariel spraying to seed coating. They state that seed coasting reduces overspray and drift, but it has led to more widespread presence in the environment. The paper indiates that pollinators and aquatic insects are particularly impacted by the incresaed prevelance of neonictinoids. Thus, we would be interested in their ecotoxticology on insects so we could undestand the impacts on ecosystems this increased prevelence of neonictinoids creates through its toxicological effects on insects. 
 
 3.  The Niwot Ridge litter and woody debris dataset was collected from the National Ecological Observatory Network, which collectively includes 81 aquatic and terrestrial sites across 20 ecoclimatic domains. 32 of these sites sample forest litter and woody debris, and we will focus on the Niwot Ridge long-term ecological research (LTER) station in Colorado. Why might we be interested in studying litter and woody debris that falls to the ground in forests? Feel free to do a brief internet search if you feel you need more background information.
 
-> Answer:
+> Answer: We would be intersted in studying litter and woody debris that falls to the ground in forest for a variety of reseasons, including understanding soil health and decomposition, as well as understanding forest fire risk. Studying litter and woody debris can allow us to understand more about how organic material is stratifying and breaking down on the forest floor and can give us information about soil health and the nutrition and productivity impacts of this soil health on the local flora. Further, understanding accumulation and composition of litter and woody debris that falls to the ground in forests can also provide an indication of wildfire risk and severity. It is important to understand and manage forest debris to prevent out of control wildfires from burining in a way that is destructive for the ecosystems and nearby human occupied areas. 
 
 4.  How is litter and woody debris sampled as part of the NEON network? Read the NEON_Litterfall_UserGuide.pdf document to learn more. List three pieces of salient information about the sampling methods here:
 
-> Answer: 
- 1.
- 2.
- 3. 
+> Answer: Litter and woody debris are sampled through ground traps and elevated traps. 
+ 1. In sites with greater than 50% aerial cover of woody vegetation greater than 2 meters in height, litter trap locations are spatially randomized. 
+ 2. Per the metadata, "in sites with less than 50% cover of woody vegetation, sites with heterogeneously distributed, patchy vegetation, trap placement is targeted such that only areas beneath qualifying vegetation are considered for trap placement"
+ 3. Ground traps are sampled once per year, and elevated traps have frequent sampling during senescnese in deciduous forests, and infrequent year round sampling in evergreen locations. 
 
 ## Obtain basic summaries of your data (Neonics)
 
@@ -78,8 +78,10 @@ View(Litter)
 # Determine the dimensions of Neonics using the dim function
 Neonics_dimensions <- dim(Neonics)
 
-#view the dimensions in the console
-print (Neonics_dimensions)
+# calling the variable
+Neonics_dimensions
+
+# the dimensions are 4623 30
 ```
 
 6.  Using the `summary` function on the "Effect" column, determine the most common effects that are studied. Why might these effects specifically be of interest?
@@ -88,8 +90,8 @@ print (Neonics_dimensions)
 # using the summary function to view a summary of the most common effects found in the effect column of the Neonics df
 Neonics_effects_summary <- summary(Neonics$Effect)
 
-# printing this summart to the console
-print(Neonics_effects_summary)
+# calling the variable
+Neonics_effects_summary
 
 ```
 
@@ -102,11 +104,11 @@ The most common effects studied in the Neonics dataframe are mortality (1493 ins
 # using summary to find the six most commonly studied species in the dataset using their common name
 Neonics_species_summary <- summary(Neonics$Species.Common.Name)
 
-# viewing the summary
-print(Neonics_species_summary)
+# calling the variable
+Neonics_species_summary
 ```
 
-> Answer: The six most commonly studied species are the Honey Bee, the Parasitic Wasp, and the Buff Tailed Bumblebee. 
+> Answer: The six most commonly studied species are the Honey Bee, the Parasitic Wasp, and the Buff Tailed Bumblebee. The three of these species all offer ecosystem services that are very important to the health of the ecoystem. All three act as polinators, however the Buff Trailed Bumblbee and the Honey Bee are far more effective than the Parasitic Wasp. However, the Parasitic Wasp is important in managing the population of other forests pests and keeping populations of other insect species in check. 
 
 8.  Concentrations are always a numeric value. What is the class of `Conc.1..Author.` column in the dataset, and why is it not numeric?
 
@@ -114,42 +116,80 @@ print(Neonics_species_summary)
 class(Neonics$Conc.1..Author.)
 ```
 
-> Answer: The class of Conc.1.Author is a factor. This is used when 
+> Answer: The class of Conc.1.Author is a factor. This is used to categorize and store data when the dataset has a limited number of different values. It is not numeric becasue 
 
 ## Explore your data graphically (Neonics)
 
 9.  Using `geom_freqpoly`, generate a plot of the number of studies conducted by publication year.
 
-```{r}
+```{r Number of Studies by publication year in Neonics}
+# inputting neonics dataset to the plot
+Q9 <- ggplot(Neonics) +
+  
+  # creating a frequency plot with publication year on x axis and count of studies on y
+  # setting the bin number to 40 and binwidth to 1 to represent a 40 year time period of options
+geom_freqpoly(aes(x = Publication.Year), bins=40, binwidth=1)
 
+Q9
 ```
 
 10. Reproduce the same graph but now add a color aesthetic so that different Test.Location are displayed as different colors.
 
-```{r}
+```{r Number of Studies in Neonics by publication year with location colors}
+# inputting neonics dataset to the plot
+Q10 <- ggplot(Neonics) +
+  
+    # creating a frequency plot with publication year on x axis and count of studies on y
+  # setting the bin number to 40 and bin width to 1 to represent a 40 year time period of options
+  # modified the color to break out different color lines by the test location
+geom_freqpoly(aes(x = Publication.Year, color=Test.Location), bins=40, binwidth=1) +
+  
+  # putting the legend at the top for easier viewing
+  theme(legend.position = "top")
 
+Q10
 ```
 
 Interpret this graph. What are the most common test locations, and do they differ over time?
 
-> Answer:
+> Answer: The two most common test locations are in a lab and a natural field test. Lab testing increased dramatically from 2005- 2015, and decreased dramatically from 2015-2020. Natural field testing increased substantially, although less dramatically than lab testing, from 2006/7- 2010, and then decreased after 2010. The field artificial and field undeterminable classifictions of tests remained small and relatively constant throughout the period. 
 
 11. Create a bar graph of Endpoint counts. What are the two most common end points, and how are they defined? Consult the ECOTOX_CodeAppendix for more information. 
 
 [**TIP**: Add `theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))` to the end of your plot command to rotate and align the X-axis labels...]
 
-```{r}
+```{r Neonics Endpoint Bar Graph}
+Q11 <- ggplot(Neonics, aes(x = Endpoint)) +
+  geom_bar()+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
+Q11
 ```
 
-> Answer:
+> Answer: The most common end points at LC50, LD50, LCOEL, and NOEL. Per the ECOTOX_CODEAPENDIX, LC50 is defined at the lethal concenration to 50% of test animals, and the LD50 is defined at the lethal does to 50% of test animals. LCOEL is defined at lowest observable effect level, which is the "lowest does (concentration) producing effects that were significantly different (as reported by the authors) from responses of controls (LOEAL/ LOEC)." NOEL is defined as no-observable-effect-level, which is the "highest does (concentration) producing effects not significantly different from responses of controls according to author's reported statistical test (NOEAL/NOEC)." 
 
 ## Explore your data (Litter)
 
 12. Determine the class of collectDate. Is it a date? If not, change to a date and confirm the new class of the variable. Using the `unique` function, determine which dates litter was sampled in August 2018.
 
-```{r}
+```{r class of collectDate and finding sampling dates in August 2018}
+# Checking the class of collectDate. It is returned as a factor. 
+class(Litter$collectDate)
 
+#install.packages("lubridate")
+library(lubridate)
+
+#changing the collectDate class to a year-month-date date
+Litter$collectDate <- ymd(Litter$collectDate)
+
+#August2018 <-interval(ymd("2018-08-01"), ymd("2018-08-31"))
+
+#unique(Litter$collectDate %within% August2018)
+
+#finding the unique dates on which the litter was collected
+unique(Litter$collectDate)
+
+#the code returns dates the second and 30th of august 2018
 ```
 
 13. Using the `unique` function, determine how many plots were sampled at Niwot Ridge. How is the information obtained from `unique` different from that obtained from `summary`?
