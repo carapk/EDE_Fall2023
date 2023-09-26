@@ -106,10 +106,14 @@ EPAair_PM25_NC2019_processed <- EPAair_PM25_NC2019_raw %>%
 
 
 #6 
-#write.csv(here('Data/Processed/EPAair_O3_NC2018_processed.csv'))
-#write.csv(here('Data/Processed/EPAair_O3_NC2019_processed.csv'))
-#write.csv(here('Data/Processed/EPAair_PM25_NC2018_processed.csv'))
-#write.csv(here('Data/Processed/EPAair_PM25_NC2019_processed.csv'))
+write.csv(EPAair_O3_NC2018_processed, row.names= FALSE,
+        file="./Data/Processed/EPAair_O3_NC2018_processed.csv")
+write.csv(EPAair_O3_NC2019_processed, row.names = FALSE,
+        file = "./Data/Processed/EPAair_O3_NC2019_processed.csv")
+write.csv(EPAair_PM25_NC2018_processed, row.names =FALSE, 
+        file ="./Data/Processed/EPAair_PM25_NC2018_processed.csv")
+write.csv(EPAair_PM25_NC2019_processed, row.names=FALSE,
+        file= "./Data/Processed/EPAair_PM25_NC2019_processed.csv")
 
 
 ```
@@ -147,14 +151,26 @@ EPAair_O3_PM25_NC_1819_raw
 
 EPAair_O3_PM25_NC_1819_processed <- 
   EPAair_O3_PM25_NC_1819_raw %>% 
-  filter(`Site Name` == "Linville Falls" |`Site Name`== "Durham Armory" | `Site Name`== "Leggett"| `Site Name`== "Hattie Avenue"| `Site Name`== "Clemmons Middle"|`Site Name`== "Mendenhall School"| `Site Name`== "Frying Pan Mountain"| `Site Name`== "West Johnston Co."| `Site Name`== "Garinger High School"| `Site Name`== "Castle Hayne"| `Site Name`== "Pitt Agri. Center"| `Site Name`== "Bryson City"| `Site Name`== "Millbrook School") 
-
+  filter(`Site Name` == "Linville Falls" |`Site Name`== "Durham Armory" | `Site Name`== "Leggett"| `Site Name`== "Hattie Avenue"| `Site Name`== "Clemmons Middle"|`Site Name`== "Mendenhall School"| `Site Name`== "Frying Pan Mountain"| `Site Name`== "West Johnston Co."| `Site Name`== "Garinger High School"| `Site Name`== "Castle Hayne"| `Site Name`== "Pitt Agri. Center"| `Site Name`== "Bryson City"| `Site Name`== "Millbrook School") %>% 
+ group_by(Date,`Site Name`, AQS_PARAMETER_DESC, COUNTY) %>%
+  filter(!is.na(DAILY_AQI_VALUE) & !is.na(SITE_LATITUDE) & !is.na(SITE_LONGITUDE)) %>%
+  summarise(meanAQI = mean(DAILY_AQI_VALUE), 
+            meanLAT = mean(SITE_LATITUDE), 
+            meanLONG = mean(SITE_LONGITUDE)) %>% 
+  mutate(month = month(Date)) %>% 
+  mutate(year= year(Date)) %>% 
 #9
+  spread(AQS_PARAMETER_DESC, meanAQI)
+
 
 #10
 
+dim(EPAair_O3_PM25_NC_1819_processed)
+
 #11
 
+write.csv(EPAair_O3_PM25_NC_1819_processed,row.names= FALSE,
+          file = "./Data/Processed/EPAair_O3_PM25_NC_1819_processed.csv")
 ```
 
 
