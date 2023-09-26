@@ -31,14 +31,37 @@ The completed exercise is due on Thursday, Sept 28th @ 5:00pm.
 2. Apply the `glimpse()` function to reveal the dimensions, column names, and structure of each dataset. 
 
 ```{r setup, message = FALSE}
-#1a 
+#1a loaded necessary packages
+#no need to run install as I already have these loaded, but can be uncommented 
+#install(tidyverse)
+#install(lubridate)
+#install(here)
+library(tidyverse)
+library(lubridate)
+library(here)
+#1b checking my working directoy 
+here()
+# can also use getwd()
 
-#1b 
+#1c loading each dataset using read_csv
+EPAair_O3_NC2018_raw <- read_csv(file=here('Data/Raw/EPAair_O3_NC2018_raw.csv'),
+                                  (stringsAsFactors = TRUE))
+EPAair_O3_NC2019_raw <- read_csv(here('Data/Raw/EPAair_O3_NC2019_raw.csv'),
+                                  (stringsAsFactors = TRUE))
+EPAair_PM25_NC2018_raw <- read_csv(here('Data/Raw/EPAair_PM25_NC2018_raw.csv'),
+                                  (stringsAsFactors = TRUE))
+EPAair_PM25_NC2019_raw <- read_csv(here('Data/Raw/EPAair_PM25_NC2019_raw.csv'),
+                                  (stringsAsFactors = TRUE))
 
-#1c 
-
-#2 
-
+EPAair_O3_NC2018_raw
+EPAair_O3_NC2019_raw
+EPAair_PM25_NC2018_raw
+EPAair_PM25_NC2019_raw
+#2 using glimpse for each dataset
+glimpse(EPAair_O3_NC2018_raw)
+glimpse(EPAair_O3_NC2019_raw)
+glimpse(EPAair_PM25_NC2018_raw)
+glimpse(EPAair_PM25_NC2019_raw)
 ```
 
 
@@ -53,13 +76,38 @@ The completed exercise is due on Thursday, Sept 28th @ 5:00pm.
 6. Save all four processed datasets in the Processed folder. Use the same file names as the raw files but replace "raw" with "processed".
 
 ```{r}
-#3
+#3 Using the mdy function from lubridate to change the data columns from
+#characters to date objects
 
-#4
+EPAair_O3_NC2018_raw$Date <- mdy(EPAair_O3_NC2018_raw$Date)
+EPAair_O3_NC2019_raw$Date <- mdy(EPAair_O3_NC2019_raw$Date)
+EPAair_PM25_NC2018_raw$Date <- mdy(EPAair_PM25_NC2018_raw$Date)
+EPAair_PM25_NC2019_raw$Date <- mdy(EPAair_PM25_NC2019_raw$Date)
 
-#5
+#4 using a pipe and "select" function 
+EPAair_O3_NC2018_processed <- EPAair_O3_NC2018_raw %>% 
+  select(Date, DAILY_AQI_VALUE, "Site Name", AQS_PARAMETER_DESC, COUNTY, 
+         SITE_LATITUDE, SITE_LONGITUDE)
+EPAair_O3_NC2019_processed <- EPAair_O3_NC2019_raw %>% 
+  select(Date, DAILY_AQI_VALUE, "Site Name", AQS_PARAMETER_DESC, COUNTY, 
+         SITE_LATITUDE, SITE_LONGITUDE)
+EPAair_PM25_NC2018_processed <- EPAair_PM25_NC2018_raw %>% 
+  select(Date, DAILY_AQI_VALUE, "Site Name", AQS_PARAMETER_DESC, COUNTY, 
+         SITE_LATITUDE, SITE_LONGITUDE) %>% 
+  mutate(AQS_PARAMETER_DESC = "PM 2.5")
+EPAair_PM25_NC2019_processed <- EPAair_PM25_NC2019_raw %>% 
+  select(Date, DAILY_AQI_VALUE, "Site Name", AQS_PARAMETER_DESC, COUNTY, 
+         SITE_LATITUDE, SITE_LONGITUDE) %>% 
+  mutate(AQS_PARAMETER_DESC = "PM 2.5")
 
-#6
+#5 see pipe above for "mutate" function on the PM2.5 datasets
+
+
+#6 
+write.csv(here('Data/Processed/EPAair_O3_NC2018_processed'))
+write.csv(EPAair_O3_NC2019_processed)
+write.csv(EPAair_PM25_NC2018_processed)
+write.csv(EPAair_PM25_NC2019_processed)
 
 ```
 
