@@ -30,15 +30,17 @@ The completed exercise is due on Thursday, Sept 28th @ 5:00pm.
 
 2. Apply the `glimpse()` function to reveal the dimensions, column names, and structure of each dataset. 
 
-```{r setup, message = FALSE}
+```{r setup packages, wd, and files, message = FALSE}
 #1a loaded necessary packages
 #no need to run install as I already have these loaded, but can be uncommented 
 #install(tidyverse)
 #install(lubridate)
 #install(here)
+#install(dplyr)
 library(tidyverse)
 library(lubridate)
 library(here)
+library(dplyr)
 #1b checking my working directoy 
 here()
 # can also use getwd()
@@ -75,7 +77,7 @@ glimpse(EPAair_PM25_NC2019_raw)
 
 6. Save all four processed datasets in the Processed folder. Use the same file names as the raw files but replace "raw" with "processed".
 
-```{r}
+```{r Wranlging individual datasets to create processed files}
 #3 Using the mdy function from lubridate to change the data columns from
 #characters to date objects
 
@@ -104,8 +106,14 @@ EPAair_PM25_NC2019_processed <- EPAair_PM25_NC2019_raw %>%
 
 #5 see pipe above for "mutate" function on the PM2.5 datasets
 
+#calling each processed individual dataset
+EPAair_O3_NC2018_processed
+EPAair_O3_NC2019_processed
+EPAair_PM25_NC2018_processed
+EPAair_PM25_NC2019_processed
 
-#6 
+#6 Using write.csv, not inlcuding row names, and saving to the file path in my
+#WD where the processed data is
 write.csv(EPAair_O3_NC2018_processed, row.names= FALSE,
         file="./Data/Processed/EPAair_O3_NC2018_processed.csv")
 write.csv(EPAair_O3_NC2019_processed, row.names = FALSE,
@@ -139,36 +147,43 @@ write.csv(EPAair_PM25_NC2019_processed, row.names=FALSE,
 
 11. Save your processed dataset with the following file name: "EPAair_O3_PM25_NC1819_Processed.csv"
 
-```{r}
-#7 
+```{r Combining datasets and filtering/cleaning combined data}
+#7 Using rbind to combine the four datasets. Verifed column names are identical. 
 
 EPAair_O3_PM25_NC_1819_raw <- rbind(EPAair_O3_NC2018_processed, EPAair_O3_NC2019_processed, EPAair_PM25_NC2018_processed, EPAair_PM25_NC2019_processed)
 
+# calling my new combined but raw dataset
 EPAair_O3_PM25_NC_1819_raw
 
-
-#8 
+#8 Processing using a pipe
 
 EPAair_O3_PM25_NC_1819_processed <- 
+  # specify my dataframe is the raw combined data
   EPAair_O3_PM25_NC_1819_raw %>% 
+  # filtering for the sites that are in common using "or" operator 
   filter(`Site Name` == "Linville Falls" |`Site Name`== "Durham Armory" | `Site Name`== "Leggett"| `Site Name`== "Hattie Avenue"| `Site Name`== "Clemmons Middle"|`Site Name`== "Mendenhall School"| `Site Name`== "Frying Pan Mountain"| `Site Name`== "West Johnston Co."| `Site Name`== "Garinger High School"| `Site Name`== "Castle Hayne"| `Site Name`== "Pitt Agri. Center"| `Site Name`== "Bryson City"| `Site Name`== "Millbrook School") %>% 
-  group_by(Date,`Site Name`, AQS_PARAMETER_DESC, COUNTY) %>%
+  # removing na values so I can calculate the mans 
   filter(!is.na(DAILY_AQI_VALUE) & !is.na(SITE_LATITUDE) & !is.na(SITE_LONGITUDE)) %>%
+  # grouping by the specified groups 
+  group_by(Date,`Site Name`, COUNTY, AQS_PARAMETER_DESC) %>%
+  #using summarise to find the means to AQI, lat, and long 
   summarise(meanAQI = mean(DAILY_AQI_VALUE), 
             meanLAT = mean(SITE_LATITUDE), 
             meanLONG = mean(SITE_LONGITUDE)) %>%  
-        #   .groups= Date, `Site Name`, AQS_PARAMETER_DESC, COUNTY ) %>% 
+  # mutating to add a month and year cloumn
   mutate(month = month(Date)) %>% 
-  mutate(year= year(Date)) %>% 
-#9
+  mutate(year= year(Date)) %>% #at this point, before the pipe and spread the dimensions at 14752 by 9
+#9 final part of pipe, spreading to create two cloumns for ozone and PM 2.5
   spread(AQS_PARAMETER_DESC, meanAQI)
 
+#calling this new df
+EPAair_O3_PM25_NC_1819_processed
 
-#10
+#10 calling dimensions of my processed data
 
 dim(EPAair_O3_PM25_NC_1819_processed)
 
-#11
+#11 saving as a CSV in my processed data folder using the file path 
 
 write.csv(EPAair_O3_PM25_NC_1819_processed,row.names= FALSE,
           file = "./Data/Processed/EPAair_O3_PM25_NC_1819_processed.csv")
@@ -181,22 +196,25 @@ write.csv(EPAair_O3_PM25_NC_1819_processed,row.names= FALSE,
 
 13. Call up the dimensions of the summary dataset.
 
-```{r}
+```{r Generating Summary Tables of O3 PM2.5 NC 1819 Processed DF }
 
-#12
+#12 Using split-combine-apply to summarize the data frame grouped by site name,
+# year, and month, removing NA values, and summarizing using the mean fn
 
-EPAair_O3_NC2018_processed_summaries <- 
+EPAair_O3_PM25_NC_1819_processed_summaries <- 
   EPAair_O3_PM25_NC_1819_processed %>% 
-  group_by(`Site Name`, year, month) %>% 
-  drop_na(Ozone) %>% 
+  group_by(`Site Name`,year, month, .add=FALSE) %>% 
+  drop_na(Ozone) %>%
   summarise(meanAQI_Ozone =mean(Ozone),
             meanAQI_PM2.5 = mean(`PM 2.5`))
+#calling my summary df
+EPAair_O3_PM25_NC_1819_processed_summaries
 
-#13
-
+#13 Calling the dimensions of my summarized processed df
+dim(EPAair_O3_PM25_NC_1819_processed_summaries)
 
 ```
 
 14. Why did we use the function `drop_na` rather than `na.omit`?
 
-> Answer: 
+> Answer: na.omit will remove all rows that have at least one na, and we are able to keep the PM2.5 rows that have na data. Drop_na allows us to drop only the rows that have an na in the specific ozone column, whereas na.omit will drop more rows than we want dropped. 
