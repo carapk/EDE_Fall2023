@@ -152,11 +152,12 @@ EPAair_O3_PM25_NC_1819_raw
 EPAair_O3_PM25_NC_1819_processed <- 
   EPAair_O3_PM25_NC_1819_raw %>% 
   filter(`Site Name` == "Linville Falls" |`Site Name`== "Durham Armory" | `Site Name`== "Leggett"| `Site Name`== "Hattie Avenue"| `Site Name`== "Clemmons Middle"|`Site Name`== "Mendenhall School"| `Site Name`== "Frying Pan Mountain"| `Site Name`== "West Johnston Co."| `Site Name`== "Garinger High School"| `Site Name`== "Castle Hayne"| `Site Name`== "Pitt Agri. Center"| `Site Name`== "Bryson City"| `Site Name`== "Millbrook School") %>% 
- group_by(Date,`Site Name`, AQS_PARAMETER_DESC, COUNTY) %>%
+  group_by(Date,`Site Name`, AQS_PARAMETER_DESC, COUNTY) %>%
   filter(!is.na(DAILY_AQI_VALUE) & !is.na(SITE_LATITUDE) & !is.na(SITE_LONGITUDE)) %>%
   summarise(meanAQI = mean(DAILY_AQI_VALUE), 
             meanLAT = mean(SITE_LATITUDE), 
-            meanLONG = mean(SITE_LONGITUDE)) %>% 
+            meanLONG = mean(SITE_LONGITUDE)) %>%  
+        #   .groups= Date, `Site Name`, AQS_PARAMETER_DESC, COUNTY ) %>% 
   mutate(month = month(Date)) %>% 
   mutate(year= year(Date)) %>% 
 #9
@@ -184,6 +185,12 @@ write.csv(EPAair_O3_PM25_NC_1819_processed,row.names= FALSE,
 
 #12
 
+EPAair_O3_NC2018_processed_summaries <- 
+  EPAair_O3_PM25_NC_1819_processed %>% 
+  group_by(`Site Name`, year, month) %>% 
+  drop_na(Ozone) %>% 
+  summarise(meanAQI_Ozone =mean(Ozone),
+            meanAQI_PM2.5 = mean(`PM 2.5`))
 
 #13
 
