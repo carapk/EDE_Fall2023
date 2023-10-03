@@ -37,8 +37,8 @@ library(cowplot)
 library(lubridate)
 library(here)
 here()
-NEON_NIWO_Litter_mass_trap_Processed <- read.csv(here("Data/Processed_key/NEON_NIWO_Litter_mass_trap_Processed.csv"), stringsAsFactors = T)
-NTL_PeterPaul <- read.csv(here("Data/Processed_key/NTL-LTER_Lake_Chemistry_Nutrients_PeterPaul_Processed.csv"), stringsAsFactors = T)
+NEON_NIWO_Litter_mass_trap_Processed <- read.csv(here("Data/Processed_key/NEON_NIWO_Litter_mass_trap_Processed.csv"), stringsAsFactors = TRUE)
+NTL_PeterPaul <- read.csv(here("Data/Processed_key/NTL-LTER_Lake_Chemistry_Nutrients_PeterPaul_Processed.csv"), stringsAsFactors = TRUE)
 #2 
 is.Date(NEON_NIWO_Litter_mass_trap_Processed$collectDate) #returns false
 is.Date(NTL_PeterPaul$sampledate) #returns false
@@ -61,7 +61,21 @@ is.Date(NEON_NIWO_Litter_mass_trap_Processed$collectDate)
 
 ```{r build plot theme}
 #3
-
+my_theme <- theme_base()  + 
+  theme(
+    line =element_line(color='black'),
+    rect =element_rect('white'),
+    text = element_text(size=12, color='black'),
+    plot.title = (color='blue'),
+    axis.text =element_text(),
+    axis.ticks =element_line(),
+    plot.background = (color='grey'),
+    panel.background = element_rect(),
+    legend.key =element_rect(),
+    legend.position = 'top',
+    
+    #complete = TRUE
+    )
 ```
 
 ## Create graphs
@@ -71,6 +85,13 @@ For numbers 4-7, create ggplot graphs and adjust aesthetics to follow best pract
 
 ```{r plot total P vs PO4}
 #4 
+ggplot(NTL_PeterPaul,
+       aes(
+         y=tp_ug,
+         x=po4,
+         color=lakename
+       ))#+
+  geom_point(size=0.5)
 
 ```
 
