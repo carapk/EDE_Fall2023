@@ -35,10 +35,13 @@ This exercise accompanies the lessons in Environmental Data Analytics on Data Vi
 library(tidyverse)
 library(cowplot)
 library(lubridate)
+library(ggthemes)
 library(here)
 here()
-NEON_NIWO_Litter_mass_trap_Processed <- read.csv(here("Data/Processed_key/NEON_NIWO_Litter_mass_trap_Processed.csv"), stringsAsFactors = TRUE)
-NTL_PeterPaul <- read.csv(here("Data/Processed_key/NTL-LTER_Lake_Chemistry_Nutrients_PeterPaul_Processed.csv"), stringsAsFactors = TRUE)
+NEON_NIWO_Litter_mass_trap_Processed <- read.csv(here("Data/New Processed_key/NEON_NIWO_Litter_mass_trap_Processed.csv"), 
+                          stringsAsFactors = FALSE)
+NTL_PeterPaul <- read.csv(here("Data/New Processed_Key/NTL-LTER_Lake_Chemistry_Nutrients_PeterPaul_Processed.csv"), 
+                          stringsAsFactors = FALSE)
 #2 
 is.Date(NEON_NIWO_Litter_mass_trap_Processed$collectDate) #returns false
 is.Date(NTL_PeterPaul$sampledate) #returns false
@@ -61,21 +64,9 @@ is.Date(NEON_NIWO_Litter_mass_trap_Processed$collectDate)
 
 ```{r build plot theme}
 #3
-my_theme <- theme_base()  + 
-  theme(
-    line =element_line(color='black'),
-    rect =element_rect('white'),
-    text = element_text(size=12, color='black'),
-    plot.title = (color='blue'),
-    axis.text =element_text(),
-    axis.ticks =element_line(),
-    plot.background = (color='grey'),
-    panel.background = element_rect(),
-    legend.key =element_rect(),
-    legend.position = 'top',
-    
-    #complete = TRUE
-    )
+my_theme <- theme(legend.position = "top",
+                  plot.title = element_text(size = 12),
+                  legend.title = element_text(size = 12))
 ```
 
 ## Create graphs
@@ -85,14 +76,22 @@ For numbers 4-7, create ggplot graphs and adjust aesthetics to follow best pract
 
 ```{r plot total P vs PO4}
 #4 
-ggplot(NTL_PeterPaul,
-       aes(
-         y=tp_ug,
-         x=po4,
-         color=lakename
-       ))#+
-  geom_point(size=0.5)
 
+  ggplot(NTL_PeterPaul,
+      aes(
+      x=po4,
+      y=tp_ug,
+      color=lakename)
+      )+
+  geom_point()+
+  my_theme+
+  #Adjusting x and y axes to hide extreme values 
+  geom_smooth(method=lm, formula = y~x, color='black')+
+  xlim(0,50)+
+  ylim(0,100)+
+  ggtitle("Total Phosphorus vs Phosphate in Peter and Paul Lakes")+
+  labs(y="Phosphorus", x="Phosphate", color="Lake")
+ 
 ```
 
 
@@ -104,12 +103,52 @@ Tip:
 
 ```{r Create boxplots}
 #5 
+BoxPlot_Temp <- ggplot(NTL_PeterPaul,
+       aes(
+        x=month,
+        y=temperature_C,
+        color=lakename)
+      )+
+  geom_boxplot()+
+  ggtitle("Lake Temperature by Month")+
+  labs(y="Temperature in Degrees C", x="Month")+
+  #scale_x_discrete(labels=month.abb)+
+  my_theme
 
+BoxPlot_Temp
+
+BoxPlot_TP <- ggplot(NTL_PeterPaul,
+       aes(
+        x=month,
+        y=tp_ug,
+        color=lakename)
+      )+
+  geom_boxplot()+
+  ggtitle("Lake Total Phosophorus by Month")+
+  labs(y="Total Phosophorus", x="Month")+
+  #scale_x_discrete(labels=month.abb)+
+  my_theme
+
+BoxPlot_TP
+
+BoxPlot_TN <- ggplot(NTL_PeterPaul,
+       aes(
+        x=month,
+        y=tn_ug,
+        color=lakename)
+      )+
+  geom_boxplot()+
+  ggtitle("Lake Total Nitrogen by Month")+
+  labs(y="Total Nitrogen", x="Month")+
+  #scale_x_discrete(labels=month.abb)+
+  my_theme
+
+BoxPlot_TN
 ```
 
 Question: What do you observe about the variables of interest over seasons and between lakes? 
 
-> Answer: 
+> Answer: Paul lake has more measurements of these variables of interested in the early summer/ late spring, and Peter lake has more measurements and prevelence in the late summer/ early fall. The IQR of nitrogen and phosophorus is much smaller than the IRQ temperature. Futher, the temperature of the lakes fall a small amount from mid summer to mid fall. 
 
 6. [Niwot Ridge] Plot a subset of the litter dataset by displaying only the "Needles" functional group. Plot the dry mass of needle litter by date and separate by NLCD class with a color aesthetic. (no need to adjust the name of each land use)
 
@@ -117,12 +156,34 @@ Question: What do you observe about the variables of interest over seasons and b
 
 ```{r Plot litter}
 #6
-
+Litter_Plot <- NEON_NIWO_Litter_mass_trap_Processed %>% 
+  filter(functionalGroup == "Needles") %>% 
+  ggplot(
+    mapping = aes(
+      x=collectDate,
+      y=dryMass,
+      color=nlcdClass)
+    ) + 
+  geom_point()+
+  ggtitle("Dry Mass of Needle Litter by Date and NLCD Class")+
+  labs(y="Dry Mass", x="Year")
+Litter_Plot
 
 #7
-
+Litter_Plot_Sep <- NEON_NIWO_Litter_mass_trap_Processed %>% 
+  filter(functionalGroup == "Needles") %>% 
+  ggplot(
+    mapping = aes(
+      x=collectDate,
+      y=dryMass)
+    ) + 
+  facet_wrap(vars(nlcdClass))+
+  geom_point()+
+  ggtitle("Dry Mass of Needle Litter by Date")+
+  labs(y="Dry Mass", x="Year")
+Litter_Plot_Sep
 
 ```
 Question: Which of these plots (6 vs. 7) do you think is more effective, and why? 
 
-> Answer:
+> Answer: Plot 7 is more effective becasue you are able to see the individual relationships between points of different nlcd locations, and these differences are more clear. In plot 6, it is difficult to see the data trends because you have to focus much harder on sepearating out the locations and colors you are looking at. I think if you want an overall look at dry mass versus collection date, six would be more effective and offers more information on the nlcd class, but for a purpose of seeing the differences between the classes, #7 plot is best. 
