@@ -1,6 +1,6 @@
 ---
 title: "Assignment 5: Data Visualization"
-author: "Student Name"
+author: "Cara Kuuskvere"
 date: "Fall 2023"
 output: pdf_document
 geometry: margin=2.54cm
@@ -32,9 +32,24 @@ This exercise accompanies the lessons in Environmental Data Analytics on Data Vi
 
 ```{r initialize project}
 #1 
-
+library(tidyverse)
+library(cowplot)
+library(lubridate)
+library(here)
+here()
+NEON_NIWO_Litter_mass_trap_Processed <- read.csv(here("Data/Processed_key/NEON_NIWO_Litter_mass_trap_Processed.csv"), stringsAsFactors = T)
+NTL_PeterPaul <- read.csv(here("Data/Processed_key/NTL-LTER_Lake_Chemistry_Nutrients_PeterPaul_Processed.csv"), stringsAsFactors = T)
 #2 
-
+is.Date(NEON_NIWO_Litter_mass_trap_Processed$collectDate) #returns false
+is.Date(NTL_PeterPaul$sampledate) #returns false
+# Using lubridate ymd function
+NEON_NIWO_Litter_mass_trap_Processed$collectDate <- 
+  ymd(NEON_NIWO_Litter_mass_trap_Processed$collectDate)
+NTL_PeterPaul$sampledate <-
+  ymd(NTL_PeterPaul$sampledate)
+# Check to verify it is now a date
+is.Date(NTL_PeterPaul$sampledate)
+is.Date(NEON_NIWO_Litter_mass_trap_Processed$collectDate)
 ```
 ## Define your theme
 3. Build a theme and set it as your default theme. Customize the look of at least two of the following: 
