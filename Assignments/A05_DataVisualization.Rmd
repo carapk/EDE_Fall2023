@@ -63,7 +63,7 @@ is.Date(NEON_NIWO_Litter_mass_trap_Processed$collectDate)
  * Legend
 
 ```{r build plot theme}
-#3
+#3 Building a custom theme for my legend and title
 my_theme <- theme(legend.position = "top",
                   plot.title = element_text(size = 12),
                   legend.title = element_text(size = 12))
@@ -75,23 +75,26 @@ For numbers 4-7, create ggplot graphs and adjust aesthetics to follow best pract
 4. [NTL-LTER] Plot total phosphorus (`tp_ug`) by phosphate (`po4`), with separate aesthetics for Peter and Paul lakes. Add a line of best fit and color it black. Adjust your axes to hide extreme values (hint: change the limits using `xlim()` and/or `ylim()`).
 
 ```{r plot total P vs PO4}
-#4 
+#4  Plotting total phosphorus by phospate
 
-  ggplot(NTL_PeterPaul,
+ Total_tp_by_PO4 <- ggplot(NTL_PeterPaul,
       aes(
       x=po4,
       y=tp_ug,
+      #separating aes for peter and paul lakes 
       color=lakename)
       )+
   geom_point()+
   my_theme+
-  #Adjusting x and y axes to hide extreme values 
+  #Adding line of best fit
   geom_smooth(method=lm, formula = y~x, color='black')+
+  #Adjusting x and y axes to hide extreme values 
   xlim(0,50)+
   ylim(0,100)+
   ggtitle("Total Phosphorus vs Phosphate in Peter and Paul Lakes")+
   labs(y="Phosphorus", x="Phosphate", color="Lake")
  
+Total_tp_by_PO4
 ```
 
 
@@ -103,47 +106,75 @@ Tip:
 
 ```{r Create boxplots}
 #5 
+#Temperature box plot
 BoxPlot_Temp <- ggplot(NTL_PeterPaul,
        aes(
-        x=month,
+         #Making x axis values the month abbreviations 
+        x=factor(month, levels=1:12, labels=month.abb),
         y=temperature_C,
         color=lakename)
       )+
+  #calling it as a box plot 
   geom_boxplot()+
+  #Adding descriptive elements to the box plot
   ggtitle("Lake Temperature by Month")+
   labs(y="Temperature in Degrees C", x="Month")+
-  #scale_x_discrete(labels=month.abb)+
+  #applying my theme
   my_theme
 
 BoxPlot_Temp
 
+#TP Box plot 
 BoxPlot_TP <- ggplot(NTL_PeterPaul,
        aes(
-        x=month,
+        #Making x axis values the month abbreviations 
+        x=factor(month, levels=1:12, labels=month.abb,
+                 ordered = is.ordered(month.name)),
         y=tp_ug,
         color=lakename)
       )+
+  #calling it as a box plot
   geom_boxplot()+
+  #adding descriptive elements
   ggtitle("Lake Total Phosophorus by Month")+
   labs(y="Total Phosophorus", x="Month")+
-  #scale_x_discrete(labels=month.abb)+
+  #applying my theme
   my_theme
 
 BoxPlot_TP
 
+#TN Box plot
 BoxPlot_TN <- ggplot(NTL_PeterPaul,
        aes(
-        x=month,
+        #Making x axis values the month abbreviations     
+        x=factor(month, levels=1:12, labels=month.abb),
         y=tn_ug,
         color=lakename)
       )+
+  #calling it as a box plot
   geom_boxplot()+
+  #adding descriptive information to the chart
   ggtitle("Lake Total Nitrogen by Month")+
   labs(y="Total Nitrogen", x="Month")+
-  #scale_x_discrete(labels=month.abb)+
+  #applying my custom theme 
   my_theme
 
 BoxPlot_TN
+
+#Creating a cowplot to combine the three graphs 
+
+Combined_Temp_TP_TN <- plot_grid(BoxPlot_Temp,BoxPlot_TN,BoxPlot_TP, 
+                                 ncol=1, nrow = 3, align=c("v"),
+                                 axis=factor(month, levels=1:12, 
+                                             labels=month.abb)
+                                  
+                                 )
+                               
+                
+      
+Combined_Temp_TP_TN  
+
+
 ```
 
 Question: What do you observe about the variables of interest over seasons and between lakes? 
