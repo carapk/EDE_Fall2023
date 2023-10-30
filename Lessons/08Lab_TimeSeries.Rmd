@@ -84,13 +84,44 @@ BR_complete <- inner_join(Rainfall_BR_processed,Temp_BR_processed)
 
 #Exercise 5: Check if there is any missing data for both temperature and rainfall series.
 
+summary(BR_complete$Rainfall)
+#noNas- if we had NAs it would show here how many we have 
+summar(BR_complete$Temperature_C)
+#no NAs
+
+#this is not best way to check for this-- will see best way in assignment
+# best way to do this is create a sequence of numbers, can also create a sequence of dates. from is first obs, 
+# to is last obs, and specify time step of daily/monthly/ yearly
+# creates a dataframe with sequence of dates for first and last months of dataset
+# use a leftjoin of this dataframe with the existing data
+# all rows will now be present, so missing dates will be populated with NAs
+# after that, you then do a summary like here
+
+```
 
 
 
 #Exercise 6: Plot both series over time on separate plots. Add a trend line using geom_smooth(). Can you say something about the trend just by visualizing the data?
+```{r}
+
+rain_line <- ggplot(BR_complete, aes(x = Date, y = Rainfall)) +
+  geom_line() +
+  labs(x = "", y = expression("Rainfall (in)"))+
+  geom_smooth(method="lm")
+#cannot visualize missing observations or really see connections in dataset 
+temp_line <- ggplot(BR_complete, aes(x = Date, y = Temperature_C)) +
+  geom_line() +
+  labs(x = "", y = expression("Temperature C"))+
+  geom_smooth(method="lm") 
+
+rain_line
+temp_line
+#cannot see well upward or downward movement, but can see some seasonality in rain
+# clear upward trend increasing temps
+# there is a lot of things you can see visually, but time series puts statistics to these conclusions
 
 
-
+```
 
 
 
@@ -99,9 +130,22 @@ BR_complete <- inner_join(Rainfall_BR_processed,Temp_BR_processed)
 ## Creating time series objects
 
 ```{r}
-#Exercise 7: Create a time series objects for each series using ts(). Make sure you specify the starting point and frequency.
-
-
+#Exercise 7: Create a time series objects for each series using ts(). Make sure you specify the starting point and #frequency.
+# Generate time series (trend test needs ts, not data.frame)
+f_month <- month(first(BR_complete$Date))
+# points to first month if you do not want to inspect dataset and find mannually 
+f_year <- year(first(BR_complete$Date)) 
+# points to first year if you do not want to inspect dataset
+BR_temp_ts <- ts(BR_complete$Temperature_C,
+                   start=c(f_year,f_month),
+                   frequency=12) 
+BR_rain_ts <- ts(BR_complete$Rainfall,
+                   start=c(f_year,f_month),
+                   frequency=12) 
+# when frequency is monthly, we use 12 becaues every 12 observations we repeat that month
+# for daily use 365 because for every 365 days we repeat jan 1
+# it is possible to run without frequency, 
+# can inspect in console calling: BR_rain_ts
 
 ```
 
