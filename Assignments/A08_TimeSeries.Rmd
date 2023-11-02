@@ -47,20 +47,40 @@ theme_set(mytheme)
 
 ```{r Dataframe Setup, message = FALSE}
 #1
-Raw_2010 <- read.csv(here("Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2010_raw.csv"), stringsAsFactors = TRUE)
-Raw_2011 <- read.csv(here("Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2011_raw.csv"), stringsAsFactors = TRUE)
-Raw_2012 <- read.csv(here("Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2012_raw.csv"), stringsAsFactors = TRUE)
-Raw_2013 <- read.csv(here("Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2013_raw.csv"), stringsAsFactors = TRUE)
-Raw_2014 <- read.csv(here("Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2014_raw.csv"), stringsAsFactors = TRUE)
-Raw_2015 <- read.csv(here("Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2015_raw.csv"), stringsAsFactors = TRUE)
-Raw_2016 <- read.csv(here("Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2016_raw.csv"), stringsAsFactors = TRUE)
-Raw_2017 <- read.csv(here("Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2017_raw.csv"), stringsAsFactors = TRUE)
-Raw_2018 <- read.csv(here("Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2018_raw.csv"), stringsAsFactors = TRUE)
-Raw_2019 <- read.csv(here("Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2019_raw.csv"), stringsAsFactors = TRUE)
+Raw_2010 <- read.csv(here
+                     ("Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2010_raw.csv"), 
+                     stringsAsFactors = TRUE)
+Raw_2011 <- read.csv(here
+                     ("Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2011_raw.csv"),
+                     stringsAsFactors = TRUE)
+Raw_2012 <- read.csv(here
+                     ("Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2012_raw.csv"),
+                     stringsAsFactors = TRUE)
+Raw_2013 <- read.csv(here
+                     ("Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2013_raw.csv"),
+                     stringsAsFactors = TRUE)
+Raw_2014 <- read.csv(here
+                     ("Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2014_raw.csv"),
+                     stringsAsFactors = TRUE)
+Raw_2015 <- read.csv(here
+                     ("Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2015_raw.csv"),
+                     stringsAsFactors = TRUE)
+Raw_2016 <- read.csv(here
+                     ("Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2016_raw.csv"), 
+                     stringsAsFactors = TRUE)
+Raw_2017 <- read.csv(here
+                     ("Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2017_raw.csv"),
+                     stringsAsFactors = TRUE)
+Raw_2018 <- read.csv(here
+                     ("Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2018_raw.csv"),
+                     stringsAsFactors = TRUE)
+Raw_2019 <- read.csv(here
+                     ("Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2019_raw.csv"), 
+                     stringsAsFactors = TRUE)
 GraingerOzone <- data.frame(rbind(Raw_2010, Raw_2011, Raw_2012, 
                             Raw_2013, Raw_2014, Raw_2015, 
                             Raw_2016, Raw_2017, Raw_2018, Raw_2019))
-GraingerOzone
+
 ```
 
 ## Wrangle
@@ -76,20 +96,21 @@ GraingerOzone
 ```{r}
 # 3
 GraingerOzone$Date <- mdy(GraingerOzone$Date)
-GraingerOzone$Date
+
 # 4
 
 GraingerOzone.Wrangled <- data.frame("Date"=GraingerOzone$Date, 
-                                     "Ozone"=GraingerOzone$Daily.Max.8.hour.Ozone.Concentration,
+                                     "Ozone"=
+                                       GraingerOzone$Daily.Max.8.hour.Ozone.Concentration,
                                      "AQI"=GraingerOzone$DAILY_AQI_VALUE)
-GraingerOzone.Wrangled
+
 # 5
 Days <- as.data.frame(seq(as.Date("2010/01/01"), as.Date("2019/12/31"), "days"))
   colnames(Days) <- c("Date")
-Days
+
 # 6
 GraingerOzone <- left_join(Days, GraingerOzone.Wrangled, by= c("Date"))
-GraingerOzone
+
 ```
 
 ## Visualize
@@ -136,7 +157,7 @@ GraingerOzone.monthly <- GraingerOzone %>%
   colnames(GraingerOzone.monthly) <- c("Year", "Month", "Ozone", "Date")
   
 
- GraingerOzone.monthly
+
 
 ```
 
@@ -172,8 +193,9 @@ plot(GraingerOzone.monthly.decomp)
 ```{r}
 #12
 
-GraingerOzone.monthly.trend<- Kendall::SeasonalMannKendall(GraingerOzone.monthly.ts)
-GraingerOzone.monthly.trend
+GraingerOzone.monthly.trend<- Kendall::SeasonalMannKendall(
+  GraingerOzone.monthly.ts)
+
 ```
 
 > Answer: Seasonal Mann-Kendall is most appropriate because it allows for the seasonality that is found in the data, and it is non-parametric. 
@@ -202,22 +224,24 @@ ggplot(GraingerOzone.monthly)+
 
 ```{r}
 #15
-GraingerOzoneMonthlyNonSeasonal <- as.data.frame(GraingerOzone.monthly.decomp$time.series[,2:3])
+GraingerOzoneMonthlyNonSeasonal <- as.data.frame(
+  GraingerOzone.monthly.decomp$time.series[,2:3])
 #just trend and remainder, need to add dates, sum trend and remainder
 # We can extract the components and turn them into data frames
 
 GraingerOzoneMonthlyNonSeasonal <- mutate(GraingerOzoneMonthlyNonSeasonal,
         Observed = rowSums(GraingerOzoneMonthlyNonSeasonal),     
         Date = GraingerOzone.monthly$Date)
-GraingerOzoneMonthlyNonSeasonal <- select(GraingerOzoneMonthlyNonSeasonal,Observed, Date)
-GraingerOzoneMonthlyNonSeasonal
+GraingerOzoneMonthlyNonSeasonal <- select(GraingerOzoneMonthlyNonSeasonal,
+                                          Observed, Date)
+
 
 #16
 GraingerOzone.monthly.nonseasonal.ts <- ts(GraingerOzoneMonthlyNonSeasonal,
                                            start=c(2010-01),
                                            frequency=12)
-GraingerOzone.monthly.nonseasonal.ts 
-GraingerOzone.monthly.nonseasonal.trend <- Kendall::MannKendall(GraingerOzone.monthly.nonseasonal.ts)
+GraingerOzone.monthly.nonseasonal.trend <- Kendall::MannKendall(
+  GraingerOzone.monthly.nonseasonal.ts)
 
 GraingerOzone.monthly.nonseasonal.trend
 
