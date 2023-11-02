@@ -1,6 +1,6 @@
 ---
 title: "Assignment 8: Time Series Analysis"
-author: "Student Name"
+author: "Cara Kuuskvere"
 date: "Fall 2023"
 output: pdf_document
 geometry: margin=2.54cm
@@ -60,6 +60,7 @@ Raw_2019 <- read.csv(here("Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2019_ra
 GraingerOzone <- data.frame(rbind(Raw_2010, Raw_2011, Raw_2012, 
                             Raw_2013, Raw_2014, Raw_2015, 
                             Raw_2016, Raw_2017, Raw_2018, Raw_2019))
+GraingerOzone
 ```
 
 ## Wrangle
@@ -75,19 +76,20 @@ GraingerOzone <- data.frame(rbind(Raw_2010, Raw_2011, Raw_2012,
 ```{r}
 # 3
 GraingerOzone$Date <- mdy(GraingerOzone$Date)
+GraingerOzone$Date
 # 4
 
 GraingerOzone.Wrangled <- data.frame("Date"=GraingerOzone$Date, 
                                      "Ozone"=GraingerOzone$Daily.Max.8.hour.Ozone.Concentration,
                                      "AQI"=GraingerOzone$DAILY_AQI_VALUE)
-
+GraingerOzone.Wrangled
 # 5
 Days <- as.data.frame(seq(as.Date("2010/01/01"), as.Date("2019/12/31"), "days"))
   colnames(Days) <- c("Date")
-
+Days
 # 6
 GraingerOzone <- left_join(Days, GraingerOzone.Wrangled, by= c("Date"))
-
+GraingerOzone
 ```
 
 ## Visualize
@@ -126,13 +128,15 @@ GraingerOzone$Ozone = zoo::na.approx(GraingerOzone$Ozone)
 #9
 GraingerOzone.monthly <- GraingerOzone %>% 
   mutate(Date = as.Date(Date)) %>% 
-  mutate(ym = format(Date, '%Y-%m')) %>% 
-  group_by(ym) %>% 
-  summarize(ym_mean = mean(Ozone)) 
-  colnames(GraingerOzone.monthly) <- c("Month", "Ozone")
+  mutate(m = month(Date),y= year(Date) ) %>% 
+  group_by(y,m) %>% 
+  summarize(m_mean = mean(Ozone)) %>% 
+  ungroup() %>% 
+  mutate(Date = make_date(y, m))
+  colnames(GraingerOzone.monthly) <- c("Year", "Month", "Ozone", "Date")
   
 
- 
+ GraingerOzone.monthly
 
 ```
 
@@ -179,18 +183,18 @@ GraingerOzone.monthly.trend
 ```{r}
 # 13
 ggplot(GraingerOzone.monthly)+
-  geom_point(aes(x=Month, y=Ozone))+
-  geom_line(aes(x=Month, y=Ozone))+
+  geom_point(aes(x=Date, y=Ozone))+
+  geom_line(aes(x=Date, y=Ozone))+
   ylab("Mean Monthly Ozone Concentration (ppm)")+
   xlab("Month")+
-  theme(axis.text.x = element_text(angle = 90))
+  theme(axis.text.x = element_text(angle = 0))
 
 
 ```
 
 14. To accompany your graph, summarize your results in context of the research question. Include output from the statistical test in parentheses at the end of your sentence. Feel free to use multiple sentences in your interpretation.
 
-> Answer: (tau = -0.143, 2-sided pvalue =0.046724)
+> Answer: The graph shows that there is a seasonabl variation of the ozone average monthly values over the course of the year. The consistent trends in the ozone values varying by season show that ozone does not randomly change with time, as can be seen by the p-value of less than 0.05 (tau = -0.143, 2-sided pvalue =0.046724)
 
 15. Subtract the seasonal component from the `GaringerOzone.monthly.ts`. Hint: Look at how we extracted the series components for the EnoDischarge on the lesson Rmd file.
 
@@ -198,14 +202,25 @@ ggplot(GraingerOzone.monthly)+
 
 ```{r}
 #15
+GraingerOzoneMonthlyNonSeasonal <- as.data.frame(GraingerOzone.monthly.decomp$time.series[,2:3])
+#just trend and remainder, need to add dates, sum trend and remainder
+# We can extract the components and turn them into data frames
 
-
+GraingerOzoneMonthlyNonSeasonal <- mutate(GraingerOzoneMonthlyNonSeasonal,
+        Observed = rowSums(GraingerOzoneMonthlyNonSeasonal),     
+        Date = GraingerOzone.monthly$Date)
+GraingerOzoneMonthlyNonSeasonal <- select(GraingerOzoneMonthlyNonSeasonal,Observed, Date)
+GraingerOzoneMonthlyNonSeasonal
 
 #16
+GraingerOzone.monthly.nonseasonal.ts <- ts(GraingerOzoneMonthlyNonSeasonal,
+                                           start=c(2010-01),
+                                           frequency=12)
+GraingerOzone.monthly.nonseasonal.ts 
+GraingerOzone.monthly.nonseasonal.trend <- Kendall::MannKendall(GraingerOzone.monthly.nonseasonal.ts)
 
-
-
+GraingerOzone.monthly.nonseasonal.trend
 
 ```
 
-> Answer: 
+> Answer:Extracting the seasonal value showst that the data is monotonic with a trend that shifts slowly over time. Removing the seasonal variation from the dataset eleminates some of the noise and allows us to see the strength of the monotonic trend as shown by the much smaller p value (tau = 0.71, 2-sided pvalue =< 2.22e-16)
